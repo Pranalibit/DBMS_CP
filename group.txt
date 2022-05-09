@@ -1,4 +1,4 @@
-12020242#'Pranjal_Adhav'#06
-12020239#'Krishna_Dyama'#58
-11911218#'Aishwary_Gattani'#82
-11910281#'Harshita_Gawade'#83
+34#'pranali'
+01#'pratiksha'
+49#'rutika'
+29#'omichan'

@@ -132,7 +132,6 @@ void dropTable(vector<string> cmd) {
         cout<<"Table name is not mentioned"<<endl;
         return;
     }
-    if
     schemafile.open("Schema.txt", ios::in);
 
     string table_name = cmd[2];
@@ -152,13 +151,17 @@ void dropTable(vector<string> cmd) {
 
         fstream temp;
         temp.open("temp.txt", ios::out);
-
+        bool flag = false;
         string line;
         while (getline(schemafile, line))
             {
                 string l1 = line.substr(0, line.find('#'));
 
-                if (table_name != l1)
+                if (table_name == l1)
+                    {
+                        flag = true;
+                    }
+                 if (table_name != l1)
                     {
                         temp << line << endl;
                     }
@@ -166,7 +169,7 @@ void dropTable(vector<string> cmd) {
 
             schemafile.close();
             temp.close();
-
+            if(flag){
             remove("Schema.txt");
             rename("temp.txt", "Schema.txt");
 
@@ -176,12 +179,21 @@ void dropTable(vector<string> cmd) {
             cout<<"File Name: ---> "<<c<<" <--- is deleted..."<<endl;
             remove(c);
             cout << "Table dropped successfully" << endl;
+            }
+            else{
+                table_name += ".txt";
+                const char *c = table_name.c_str();
+                cout<<"File Name: ---> "<<c<<" <--- is not found..."<<endl;
+                remove("temp.txt");
+               rename("temp.txt", "Schema.txt");
+
+            }
 
 
 }
 
 
-//Truncate Table
+//Truncate Table//checked_working
 void truncateTable(vector<string> cmd) {
     if(cmd.size() == 2) {
         cout<<"Table name is not mentioned"<<endl;
@@ -224,7 +236,7 @@ void truncateTable(vector<string> cmd) {
 
 }
 
-//Describe
+//Describe//checked_working
 void describe(vector<string> cmd) {
     schemafile.open("Schema.txt", ios::in);
 
@@ -281,7 +293,7 @@ void describe(vector<string> cmd) {
     schemafile.close();
 }
 
-//Insert
+//Insert//checked_working
 void insert_into(vector<string> cmd) {
     string table_name = cmd[2];
 
@@ -417,7 +429,7 @@ void insert_into(vector<string> cmd) {
 
 }
 
-//Update
+//Update//checked_working
 void update(vector<string> cmd) {
     vector<string> schema;
     fetchSchema(cmd[1], schema);
@@ -599,7 +611,7 @@ void update(vector<string> cmd) {
     }
 }
 
-// Delete
+// Delete//checked_working
 void delete_(vector<string> cmd) {
 
     vector<string> schema;
@@ -718,17 +730,17 @@ void delete_(vector<string> cmd) {
     }
 }
 
-// Select
+// Select//checked_working
 void select(vector<string> cmd) {
 
     fstream table;
     string line;
     string table_name;
     table_name = cmd[3];
-
+    //cout << cmd.size() << endl;
     if (cmd[1] == "*")
     {
-        if (cmd.size() == 4)
+        if (cmd.size() == 5)
         {
             table.open(table_name + ".txt", ios::in);
             while (getline(table, line))
@@ -1010,7 +1022,11 @@ void helpCmd(vector<string> cmd) {
     cout << "\n------------HELP----------------" << endl;
     int choice=0;
 
-    cout<<"\t\t1. CREATE TABLE\n\t\t2. DROP TABLE\n\t\t3. DESCRIBE\n\t\t4. INSERT\n\t\t5. DELETE\n\t\t6. UPDATE\n\t\t7. SELECT\n\t\t8. HELP TABLES\n\t\t9. HELP CMD\n\t\t10. QUIT"<<endl;
+    cout<<"\t\t1. CREATE TABLE\n\t\t2. DROP TABLE\n\t\t3. SELECT\n\t\t4. INSERT\n\t\t5. DELETE\n\t\t6. UPDATE\n\t\t7. DESCRIBE\n\t\t8. HELP TABLES\n\t\t9. HELP CMD\n\t\t10. TRUNCATE\n\t\t11. QUIT"<<endl;
+    cout<<"Enter your Choice: ";
+    bool flag = true;
+    while(flag){
+    cout<<"\t\t1. CREATE TABLE\n\t\t2. DROP TABLE\n\t\t3. SELECT\n\t\t4. INSERT\n\t\t5. DELETE\n\t\t6. UPDATE\n\t\t7. DESCRIBE\n\t\t8. HELP TABLES\n\t\t9. HELP CMD\n\t\t10. TRUNCATE\n\t\t11. QUIT"<<endl;
     cout<<"Enter your Choice: ";
     cin>>choice;
     switch (choice)
@@ -1024,7 +1040,7 @@ void helpCmd(vector<string> cmd) {
 
     case 2:
         cout << "\nCommand : DROP TABLE" << endl;
-        cout << "Info: Deletes a table" << endl;
+        cout << "Info: Removes table defination" << endl;
         cout << "\nFormat: \nDROP TABLE table_name;" << endl;
         break;
 
@@ -1063,25 +1079,32 @@ void helpCmd(vector<string> cmd) {
         cout << "Info: The output will be the list of tables in the database, with one row per table name." << endl;
         cout<<"\tIfthere are no tables in the database, you should print the message “No tables found”.\n";
         break;
-    /*
     case 9:
         cout<<"The output will be a short description of the corresponding command and it's expected format."<<std::endl;
         break;
-    */
+    case 10:
+        cout << "Info: Removes all rows from table." << endl;
+        cout << "Syntax: TRUNCATE table table_name ;" << endl;
+        break;
+    case 11:
+        flag = false;
+        break;
     default:
         cout << "Syntax Error";
+        }
     }
 }
 
 void altertable(vector<string> cmd){
     string table_name = cmd[2];
-
+    cout << table_name << endl;
     fstream dataFile(table_name + ".txt", ios::in);
 
     if(dataFile)
     {
         dataFile.close();
-        dataFile.open(table_name, std::ios::in);
+        dataFile.open(table_name, ios::in);
+        cout << "went through this if" << endl;
     }
     else
     {
@@ -1089,15 +1112,17 @@ void altertable(vector<string> cmd){
         return;
     }
 
-    string new_column = cmd[cmd.size() - 2];
-    string new_datatype = cmd[cmd.size() - 1];
-
+    cout << " out of it" << endl;
+    string new_column = cmd[cmd.size() - 3];
+    string new_datatype = cmd[cmd.size() - 2];
+    cout << new_column << endl;
+    cout << new_datatype << endl;
    // string::iterator itr = new_datatype.end();
     // new_datatype.erase(itr - 1, itr);
 
     schemafile.close();
     schemafile.open("Schema.txt", ios::in);
-
+     cout << "before row vector" << endl;
     vector<string> row_vector;
 
     string line;
@@ -1109,7 +1134,7 @@ void altertable(vector<string> cmd){
         if(line.substr(0, table_name.length()) == table_name)
             row_vector.push_back(line);
     }
-
+    cout << "after while schema file" << endl;
     string new_record = table_name + "#" + new_column + "#" + new_datatype;
 
     row_vector.push_back(new_record);
@@ -1130,7 +1155,7 @@ void altertable(vector<string> cmd){
 
         schema_new << line << std::endl;
     }
-
+    cout << "after second schema file while" << endl;
     for(int i = 0; i < row_vector.size(); i++)
     {
         schema_new << row_vector[i] << std::endl;
@@ -1152,15 +1177,16 @@ void altertable(vector<string> cmd){
     getline(dataFile, line);
     line += new_column + "#";
     dataFile_new <<line<<std::endl;
-
-    while(!dataFile.eof())
-    {
-        getline(dataFile, line);
-        if(line == "")
-            continue;
-        line += "null#";
-        dataFile_new << line <<std::endl;
-    }
+    cout << "hmm iske bahar nikale dikhao" << endl;
+//    while(!dataFile.eof())
+//    {s
+//        getline(dataFile, line);
+//        if(line == "")
+//            continue;
+//        line += "null#";
+//        dataFile_new << line <<std::endl;
+//    }
+    cout << "accha to yahi nahi aare kya aap" << endl;
 
     dataFile_new.close();
     dataFile.close();
@@ -1281,11 +1307,12 @@ int main() {
  vector<string> cmd;
     string input;
     cout<<"_______________________________________________________!!!WELCOME!!!________________________________________________"<<endl<<endl;
-    cout<<"_______________________________________________________TY-GROUP 09__________________________________________________"<<endl<<endl;
+    cout<<"_______________________________________________________TY-GROUP 47__________________________________________________"<<endl<<endl;
     //cout<<"____MENU___"<<endl;
     //cout<<"1. CREATE TABLE\n2. DROP TABLE\n3. DESCRIBE\n4. INSERT\n5. DELETE\n6. UPDATE\n7. SELECT\n8. HELP TABLES\n9. HELP CMD\n10. QUIT"<<endl;
     cout<<"\nEnter your Command: ";
     getline(cin, input);
+    transform(input.begin(), input.end(), input.begin(), ::tolower);
     while (input != "Quit") {
         convertToVector(input, cmd);
         handleCmd(cmd);

@@ -1,1 +1,3 @@
-group#id#int#name#char#roll_no#int
+group#roll_no#int#name#char
+demo1#id#int
+demo1#name#char

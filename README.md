@@ -1,6 +1,6 @@
 # DBMS_CP
 
-## Group : TY - 47 
+## Group : TY CS C 47 
 
 ## Group Members:
 

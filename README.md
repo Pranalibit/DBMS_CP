@@ -12,5 +12,16 @@
 | 48 | Pratiksha Patil      |    11910542 |
 | 49 | Rutika Patil      |    11910689 |
 
-
+## Features:
+- **Create**
+- **Drop**
+- **Truncate**
+- **Describe**
+- **Insert**
+- **Update**
+- **Delete**
+- **Select**
+- **Help**
+- **Alter**
+- 
 ### Note: Course Project on Main Branch
